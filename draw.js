@@ -25,7 +25,19 @@ ctx.lineTo(250,50);
 ctx.stroke();
 
 ctx.beginPath();
-ctx.arc(200,200,50,0,Math.PI/2);
+ctx.arc(100,200,20,0,Math.PI/2);
+ctx.stroke();
+
+ctx.beginPath();
+ctx.arc(150,200,20,Math.PI/2, Math.PI);
+ctx.stroke();
+
+ctx.beginPath();
+ctx.arc(200,200,20,Math.PI, Math.PI*1.5);
+ctx.stroke();
+
+ctx.beginPath();
+ctx.arc(250,200,20,Math.PI*1.5, Math.PI*2);
 ctx.stroke();
 
 
