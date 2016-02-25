@@ -4,6 +4,7 @@ function drawEntity(x,y,txt,icon)
 {
     ctx.font = "14px Arial";
     ctx.textAlign="center";
+    ctx.fillStyle = "#000000";
     ctx.fillText(txt,x,y+35);
     var img = new Image();
     img.onload = function () {
@@ -73,6 +74,7 @@ function drawLineRight(x,y,l, txt)
     
     ctx.font = "14px Arial";
     ctx.textAlign="center";
+    ctx.fillStyle = "#aaaaaa";
     ctx.fillText(txt,x+(l/2),y-10);
     
     curX = curX + l;
@@ -93,5 +95,5 @@ drawLineRight(curX,curY,100, "");
 drawArcRightUp(curX,curY,20);
 drawArcUpRight(curX,curY,20);
 drawLineRight(curX,curY,200, "Uses");
-drawEntity(curX, curY, "URN1122", "user.png");
+drawEntity(curX, curY, "urn1122", "laptop.png");
 
