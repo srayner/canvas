@@ -1,14 +1,36 @@
 var curX, curY;
+var originX, originY;
+var mousePos;
+var isMouseDown = false;
+var canvas = document.getElementById("myCanvas");
+var context = canvas.getContext("2d");
+
+function getMousePos(event) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top
+    };
+}
+
+function drawCoords() {
+    context.font = "12px Arial";
+    context.textAlign="left";
+    context.fillStyle = "#000000";
+    context.fillText("X: " + mousePos.x.toString(), canvas.width - 70, 15);
+    context.fillText("Y: " + mousePos.y.toString(), canvas.width - 70, 30);
+    context.fillText("Mouse: " + isMouseDown.toString(), canvas.width - 70, 45);
+}
 
 function drawEntity(x,y,txt,icon)
 {
-    ctx.font = "14px Arial";
-    ctx.textAlign="center";
-    ctx.fillStyle = "#000000";
-    ctx.fillText(txt,x,y+35);
+    context.font = "14px Arial";
+    context.textAlign="center";
+    context.fillStyle = "#000000";
+    context.fillText(txt,x,y+35);
     var img = new Image();
     img.onload = function () {
-        ctx.drawImage(img, x-32, y-32-10);
+        context.drawImage(img, x-32, y-32-10);
     };
     img.src = icon;
     
@@ -16,22 +38,22 @@ function drawEntity(x,y,txt,icon)
 
 function drawCross(x,y)
 {
-    ctx.strokeStyle = "#0000ff"; // blue
+    context.strokeStyle = "#0000ff"; // blue
     
-    ctx.beginPath();
-    ctx.moveTo(x-5, y-5);
-    ctx.lineTo(x+5,y+5);
-    ctx.moveTo(x-5, y+5);
-    ctx.lineTo(x+5, y-5);    
-    ctx.stroke();
+    context.beginPath();
+    context.moveTo(x-5, y-5);
+    context.lineTo(x+5,y+5);
+    context.moveTo(x-5, y+5);
+    context.lineTo(x+5, y-5);    
+    context.stroke();
 }
 
 function drawArcRightUp(x,y,r)
 {
-    ctx.strokeStyle = "#aaaaaa";
-    ctx.beginPath();
-    ctx.arc(x,y-r,r,0,Math.PI/2);
-    ctx.stroke();
+    context.strokeStyle = "#aaaaaa";
+    context.beginPath();
+    context.arc(x,y-r,r,0,Math.PI/2);
+    context.stroke();
     
     curX = curX + r;
     curY = curY - r;
@@ -39,18 +61,18 @@ function drawArcRightUp(x,y,r)
 
 function drawArcRightDown(x,y,r)
 {
-    ctx.strokeStyle = "#aaaaaa";
-    ctx.beginPath();
-    ctx.arc(x,y+r,r,Math.PI*1.5,Math.PI*2);
-    ctx.stroke();
+    context.strokeStyle = "#aaaaaa";
+    context.beginPath();
+    context.arc(x,y+r,r,Math.PI*1.5,Math.PI*2);
+    context.stroke();
 }
 
 function drawArcUpRight(x,y,r)
 {
-    ctx.strokeStyle = "#aaaaaa";
-    ctx.beginPath();
-    ctx.arc(x+r,y,r,Math.PI,Math.PI*1.5);
-    ctx.stroke();
+    context.strokeStyle = "#aaaaaa";
+    context.beginPath();
+    context.arc(x+r,y,r,Math.PI,Math.PI*1.5);
+    context.stroke();
     
     curX = curX + r;
     curY = curY - r;
@@ -58,42 +80,64 @@ function drawArcUpRight(x,y,r)
 
 function drawArcDownRight(x,y,r)
 {
-    ctx.strokeStyle = "#aaaaaa";
-    ctx.beginPath();
-    ctx.arc(x+r,y,r,Math.PI*0.5,Math.PI);
-    ctx.stroke();
+    context.strokeStyle = "#aaaaaa";
+    context.beginPath();
+    context.arc(x+r,y,r,Math.PI*0.5,Math.PI);
+    context.stroke();
 }
 
 function drawLineRight(x,y,l, txt)
 {
-    ctx.strokeStyle = "#aaaaaa";
-    ctx.beginPath();
-    ctx.moveTo(x,y);
-    ctx.lineTo(x+l, y);
-    ctx.stroke();
+    context.strokeStyle = "#aaaaaa";
+    context.beginPath();
+    context.moveTo(x,y);
+    context.lineTo(x+l, y);
+    context.stroke();
     
-    ctx.font = "14px Arial";
-    ctx.textAlign="center";
-    ctx.fillStyle = "#aaaaaa";
-    ctx.fillText(txt,x+(l/2),y-10);
+    context.font = "14px Arial";
+    context.textAlign="center";
+    context.fillStyle = "#aaaaaa";
+    context.fillText(txt,x+(l/2),y-10);
     
     curX = curX + l;
 }
 
-var c=document.getElementById("myCanvas");
-var ctx=c.getContext("2d");
+function redraw()
+{
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    drawCoords();
+    curX=originX;
+    curY=originY;
+    drawEntity(curX,curY,"srayner", "user.png");
+    drawLineRight(curX,curY,100, "");
+    drawArcRightUp(curX,curY,20);
+    drawArcUpRight(curX,curY,20);
+    drawLineRight(curX,curY,200, "Uses");
+    drawEntity(curX, curY, "urn1122", "laptop.png");
+}
+
+
+
+canvas.addEventListener('mousedown', function(event) {
+    isMouseDown = true;  
+}, false);
+
+canvas.addEventListener('mouseup', function(event) {
+    isMouseDown = false;
+}, false);
+
+canvas.addEventListener('mousemove', function(event) {
+    console.log('mousemove');
+    mousePos = getMousePos(event);
+    redraw();
+}, false);
 
 var userImage = new Image();
 userImage.src = "user.png";
 
+originX = 200;
+originY = 300;
 
+drawStuff(originX, originY);
 
-curX=100;
-curY=300;
-drawEntity(curX,curY,"srayner", "user.png");
-drawLineRight(curX,curY,100, "");
-drawArcRightUp(curX,curY,20);
-drawArcUpRight(curX,curY,20);
-drawLineRight(curX,curY,200, "Uses");
-drawEntity(curX, curY, "urn1122", "laptop.png");
 
