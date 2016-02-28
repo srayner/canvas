@@ -1,6 +1,7 @@
 var curX, curY;
 var originX, originY;
 var mousePos;
+var downPos;
 var isMouseDown = false;
 var canvas = document.getElementById("myCanvas");
 var context = canvas.getContext("2d");
@@ -17,9 +18,15 @@ function drawCoords() {
     context.font = "12px Arial";
     context.textAlign="left";
     context.fillStyle = "#000000";
-    context.fillText("X: " + mousePos.x.toString(), canvas.width - 70, 15);
-    context.fillText("Y: " + mousePos.y.toString(), canvas.width - 70, 30);
-    context.fillText("Mouse: " + isMouseDown.toString(), canvas.width - 70, 45);
+    if (undefined !== mousePos) {
+        context.fillText("X: " + mousePos.x.toString(), canvas.width - 70, 15);
+        context.fillText("Y: " + mousePos.y.toString(), canvas.width - 70, 30);
+    }
+    if (undefined !== downPos) {
+        context.fillText("dX: " + downPos.x.toString(), canvas.width - 70, 45);
+        context.fillText("dY: " + downPos.y.toString(), canvas.width - 70, 60);
+    }
+    context.fillText("Mouse: " + isMouseDown.toString(), canvas.width - 70, 75);
 }
 
 function drawEntity(x,y,txt,icon)
@@ -119,7 +126,8 @@ function redraw()
 
 
 canvas.addEventListener('mousedown', function(event) {
-    isMouseDown = true;  
+    isMouseDown = true;
+    downPos = getMousePos(event);
 }, false);
 
 canvas.addEventListener('mouseup', function(event) {
@@ -127,17 +135,21 @@ canvas.addEventListener('mouseup', function(event) {
 }, false);
 
 canvas.addEventListener('mousemove', function(event) {
-    console.log('mousemove');
     mousePos = getMousePos(event);
-    redraw();
+    if (isMouseDown) {
+        var dX = mousePos.x - downPos.x;
+        var dY = mousePos.y - downPos.y;
+        originX = originX + dX;
+        originY = originY + dY;
+        downPos.x = mousePos.x;
+        downPos.y = mousePos.y;
+        redraw();
+    }
 }, false);
-
-var userImage = new Image();
-userImage.src = "user.png";
 
 originX = 200;
 originY = 300;
 
-drawStuff(originX, originY);
+redraw();
 
 
